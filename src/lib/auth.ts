@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { Cookies } from '@sveltejs/kit';
 import crypto from 'crypto';
-const admin_pw = process.env.ADMIN_PW || 'dummy_key';
+import { adminPassword } from './env';
 
 export async function validateSession(cookies : Cookies) {
     const sessionCookie = cookies.get('session');
@@ -14,7 +14,7 @@ export async function validateSession(cookies : Cookies) {
         const [ivHex, encryptedData] = sessionCookie.split(':');
         const iv = Buffer.from(ivHex, 'hex');
         
-        const key = crypto.createHash('sha256').update(admin_pw).digest();
+        const key = crypto.createHash('sha256').update(adminPassword()).digest();
         const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
         
         let decrypted = decipher.update(encryptedData, 'hex', 'utf8');
@@ -25,7 +25,7 @@ export async function validateSession(cookies : Cookies) {
         const now = new Date();
         const expires = new Date(sessionData.expires);
         
-        if (expires < now || sessionData.secret !== admin_pw) {
+        if (expires < now || sessionData.secret !== adminPassword()) {
             cookies.delete('session', { path: '/' });
             throw error(401, 'No session found');
         }

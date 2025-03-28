@@ -1,8 +1,9 @@
 import { json } from '@sveltejs/kit';
 import type { RequestEvent } from '@sveltejs/kit';
 import { validateSession } from '$lib/auth';
-import { deepSeek, gemini } from '$lib/clients';
+import { deepSeek, gemini } from '$lib/openai';
 import type OpenAI from 'openai';
+import { queryOllamaModel } from '$lib/ollama';
 
 async function queryModel(message: string, model: string, openAi: OpenAI) {    
     return await openAi.chat.completions.create({
@@ -24,7 +25,7 @@ function getModel(model: string) {
         case 'gemini-2.0-flash':
             return gemini;
         default:
-            return deepSeek;
+            return null;
     }
 }
 
@@ -38,14 +39,23 @@ export async function GET({ url, cookies }: RequestEvent) {
     model = model.toLowerCase();
     const decodedMessage = message ? decodeURIComponent(message) : '';
     let openAi = getModel(model);
-    const completion = await queryModel(decodedMessage, model, openAi);
-    return json(
-        {
-            content: completion.choices[0].message.content,
-            author: model,
-            timestamp: new Date().toISOString(),
-            model: model
-        }
-    );
+    if (openAi) {
+        const completion = await queryModel(decodedMessage, model, openAi);
+        return json(
+            {
+                content: completion.choices[0].message.content,
+                author: model,
+                timestamp: new Date().toISOString(),
+                model: model
+            }
+        );
+    }
+    const completion = await queryOllamaModel(model, decodedMessage);
+    return json({
+        content: completion.response,
+        author: model,
+        timestamp: new Date().toISOString(),
+        model: model
+    });
 }
 

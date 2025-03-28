@@ -1,19 +1,28 @@
 <script lang="ts">
-
     import type { Message } from './message';
+    import type { Model } from '$lib/models';
 	import Markdown from 'svelte-exmarkdown';
     import { goto } from "$app/navigation";
+	import { onMount } from 'svelte';
     let inputValue = $state('');
     let inputHeight = $state(24);
     let isLoading = $state(false);
     let selectedModel = $state('gemini-2.0-flash');
     let messages = $state<Message[]>([]);
     
-    const availableModels = [
-        { id: 'deepseek-chat', name: 'DeepSeek Chat' },
-        { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash' },
-        { id: 'deepseek-reasoner', name: 'DeepSeek Reasoner' },
-    ];
+    let availableModels = $state<Model[]>([]);
+
+    onMount(() => {
+        getAvailableModels()
+    })
+
+    function getAvailableModels() {
+        fetch('/models')
+            .then(response => response.json())
+            .then(data => {
+                availableModels = data;
+            })  
+    }
     
     function adjustTextareaHeight(event: Event): void {
         const textarea = event.target as HTMLTextAreaElement;
