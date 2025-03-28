@@ -88,14 +88,19 @@
             </div>
             <div class="flex-grow"></div>
             <div class="relative">
-                <select 
-                    bind:value={selectedModel}
-                    class="custom-select"
-                >
-                    {#each availableModels as model}
-                        <option value={model.id}>{model.name}</option>
-                    {/each}
-                </select>
+                {#await availableModels}
+                    <div class="custom-select">Loading...</div>
+                {:then availableModels} 
+                    <select 
+                        bind:value={selectedModel}
+                        class="custom-select"
+                    >
+                        {#each availableModels as model}
+                            <option value={model.id}>{model.name}</option>
+                        {/each}
+                    </select>
+                {/await}
+                
             </div>
         </div>
         
