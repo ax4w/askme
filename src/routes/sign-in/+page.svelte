@@ -19,7 +19,7 @@
     <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
         <legend class="fieldset-legend">Login</legend> 
         <label class="fieldset-label" for="password">Password</label>
-        <input type="password" class="input" placeholder="Password" name="password" bind:value={password}/> 
+        <input type="password" class="input" placeholder="Password!" name="password" bind:value={password}/> 
         <button class="btn btn-neutral mt-4" onclick={() => signIn()}>Login</button>
       </fieldset>
 </div>

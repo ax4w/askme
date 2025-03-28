@@ -26,7 +26,6 @@ export async function allAvailableModels(): Promise<Model[]> {
     }
     if (ollamaConnectionString()) {
         let ollamaModels = await allAvailableOllamaModels();
-        console.log(ollamaModels);
         ollamaModels.forEach(model => {
             models.push({
                 id: model.id,

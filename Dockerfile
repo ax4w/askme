@@ -39,7 +39,6 @@ EXPOSE 3000
 # Set environment variables (these will be overridden by runtime environment variables)
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV HOST=0.0.0.0
 
 # Start the application
 CMD ["node", "build"] 
