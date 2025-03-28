@@ -1,8 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { Cookies } from '@sveltejs/kit';
 import crypto from 'crypto';
-import { ADMIN_PW } from '$env/static/private';
-const admin_pw = ADMIN_PW || process.env.ADMIN_PW || 'dummy_key';
+const admin_pw = process.env.ADMIN_PW || 'dummy_key';
 
 export async function validateSession(cookies : Cookies) {
     const sessionCookie = cookies.get('session');

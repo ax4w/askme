@@ -1,8 +1,7 @@
-import { ADMIN_PW } from '$env/static/private'
 import { json } from '@sveltejs/kit';
 import crypto from 'crypto';
 import type { RequestEvent } from '@sveltejs/kit';
-const admin_pw = ADMIN_PW || process.env.ADMIN_PW || 'dummy_key';
+const admin_pw = process.env.ADMIN_PW || 'dummy_key';
 
 export async function POST({ cookies, request } : RequestEvent) {
     const data = await request.json();

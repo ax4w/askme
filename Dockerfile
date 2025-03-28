@@ -13,11 +13,6 @@ RUN npm install
 # Copy all files
 COPY . .
 
-# Create .env file with placeholder values for build time
-RUN echo "DEEPSEEK_API_KEY=placeholder_for_build_only" > .env && \
-    echo "GEMINI_API_KEY=placeholder_for_build_only" >> .env && \
-    echo "ADMIN_PW=placeholder_for_build_only" >> .env
-
 # Build the application
 RUN npm run build
 
