@@ -2,7 +2,7 @@
     import type { Message } from './message';
     import type { Model } from '$lib/models';
 	import Markdown from 'svelte-exmarkdown';
-    import { pullOllamaModel } from '$lib/ollama';
+    
     import { goto } from "$app/navigation";
 	import { onMount } from 'svelte';
     let inputValue = $state('');
@@ -15,11 +15,16 @@
 
     onMount(() => {
         getAvailableModels()
-        pullOllamaModel("deepseek-r1:1.5b")
+        fetch('/models/pull')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })  
+        
     })
 
     function getAvailableModels() {
-        fetch('/models')
+        fetch('/models/list')
             .then(response => response.json())
             .then(data => {
                 availableModels = data;
