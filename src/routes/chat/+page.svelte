@@ -19,8 +19,8 @@
             .then(response => response.json())
             .then(data => {
                 console.log(data);
+                getAvailableModels()
             })  
-        
     })
 
     function getAvailableModels() {
