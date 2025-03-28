@@ -37,7 +37,6 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
-		"clerk-sveltekit": "^0.4.2",
 		"daisyui": "^5.0.9",
 		"openai": "^4.90.0",
 		"svelte-exmarkdown": "^5.0.0"

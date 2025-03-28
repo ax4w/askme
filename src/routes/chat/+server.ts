@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestEvent } from '@sveltejs/kit';
+import { validateSession } from '$lib/auth';
 import { deepSeek, gemini } from '$lib/clients';
 import type OpenAI from 'openai';
 
@@ -27,7 +28,8 @@ function getModel(model: string) {
     }
 }
 
-export async function GET({ url }: RequestEvent) {
+export async function GET({ url, cookies }: RequestEvent) {
+    await validateSession(cookies)  
     let message = url.searchParams.get('message');
     let model = url.searchParams.get('model');
     if (!message || !model) {

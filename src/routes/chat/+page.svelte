@@ -2,6 +2,7 @@
 
     import type { Message } from './message';
 	import Markdown from 'svelte-exmarkdown';
+    import { goto } from "$app/navigation";
     let inputValue = $state('');
     let inputHeight = $state(24);
     let isLoading = $state(false);
@@ -43,10 +44,14 @@
             });
         
             fetch(`/chat?message=${encodeURIComponent(userMessage)}&model=${selectedModel}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (response.status == 401) {
+                        goto('/');
+                    }
+                   return response.json()
+                })
                 .then(data => {
                     messages.push(data);
-                    
                     setTimeout(() => {
                         const container = document.querySelector('.terminal-content-area');
                         if (container) container.scrollTop = container.scrollHeight;

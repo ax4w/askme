@@ -1,8 +1,12 @@
 <script>
+	import { goto } from "$app/navigation";
     import "../app.css";
-    import SignIn from "./auth/sign-in/+page.svelte";
+    import SignIn from "./sign-in/+page.svelte";
+    function signInSuccess() {
+        goto("/chat");
+    }
 </script>
 
 <div>
-    <SignIn />
+    <SignIn {signInSuccess} />
 </div>
