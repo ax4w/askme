@@ -1,0 +1,21 @@
+# Version control
+.git
+.gitignore
+
+# Node.js
+node_modules
+npm-debug.log
+
+# SvelteKit
+/.svelte-kit
+/build
+
+# Environment variables (we'll handle these separately)
+.env
+.env.*
+
+# Other
+.DS_Store
+.vscode
+.idea
+*.md 
