@@ -13,5 +13,5 @@ RUN apk add --no-cache ca-certificates && \
     adduser -D appuser
 RUN mkdir -p /management-data && chown appuser:appuser /management-data
 USER appuser
-EXPOSE 8080
+EXPOSE 6969
 CMD ["./app"]

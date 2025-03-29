@@ -4,7 +4,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - MANAGEMENT_CONNECTION_STRING=management:8080
+      - MANAGEMENT_CONNECTION_STRING=management:6969
     depends_on:
       - ollama
       - management
@@ -22,7 +22,7 @@ services:
     volumes:
       - management-data:/management-data
     ports:
-      - "8080:8080"
+      - "6969:6969"
     networks:
       - management-net
 
