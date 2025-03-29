@@ -15,12 +15,13 @@
 
     onMount(() => {
         getAvailableModels()
-        fetch('/models/pull')
+        /*fetch('/models/pull')
             .then(response => response.json())
             .then(data => {
+                console.log("pulled model");
                 console.log(data);
                 getAvailableModels()
-            })  
+            })  */
     })
 
     function getAvailableModels() {
