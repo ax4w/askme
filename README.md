@@ -1,6 +1,12 @@
 # askme
 
 ## Deployment
+### Info
+Used Ports: 
+- Mangement uses port 6969
+- Frontend uses port 3000
+- Ollama uses its default port
+
 ### Easy way
 Just use the compose.yaml and add all needed env parameters
 
