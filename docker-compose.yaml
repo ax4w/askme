@@ -4,7 +4,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - OLLAMA_CONNECTION_STRING=ollama:11434  # Point to ollama service
+      - OLLAMA_CONNECTION_STRING=ollama:11434 
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - ADMIN_PW=${ADMIN_PW}
     depends_on:
       - ollama
     networks:

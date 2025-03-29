@@ -1,25 +1,38 @@
 <script lang="ts">
     let { signInSuccess } = $props();
     let password = $state('');
-    async function signIn() {
-        const response = await fetch('/sign-in', {
-            method: 'POST',
-            body: JSON.stringify({ password: password }),
-        }); 
-        const data = await response.json();
-        if (data.success) {
-            signInSuccess();
-        } else {
-            alert('Invalid password');
-        }
+    let error = $state(false);
+    
+    async function handleSubmit(event: Event) {
+      event.preventDefault();
+      
+      const response = await fetch('/sign-in', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        signInSuccess();
+      } else {
+        error = true;
+      }
     }
-</script>
-
-<div class="h-screen flex items-center justify-center">
-    <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
-        <legend class="fieldset-legend">Login</legend> 
+  </script>
+  
+  <div class="h-screen flex items-center justify-center">
+    <form method="POST" action="/sign-in" on:submit={handleSubmit}>
+      <fieldset class="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+        <legend class="fieldset-legend">Login</legend>
         <label class="fieldset-label" for="password">Password</label>
-        <input type="password" class="input" placeholder="Password!" name="password" bind:value={password}/> 
-        <button class="btn btn-neutral mt-4" onclick={() => signIn()}>Login</button>
+        <input type="password" class="input" placeholder="Password!" name="password" bind:value={password}/>
+        {#if error}
+          <div class="text-error">Invalid password</div>
+        {/if}
+        <button class="btn btn-neutral mt-4" type="submit">Login</button>
       </fieldset>
-</div>
+    </form>
+  </div>

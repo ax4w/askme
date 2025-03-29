@@ -13,10 +13,6 @@ RUN npm install
 # Copy all files
 COPY . .
 
-RUN echo "DEEPSEEK_API_KEY=placeholder_for_build_only" > .env && \
-    echo "GEMINI_API_KEY=placeholder_for_build_only" >> .env && \
-    echo "ADMIN_PW=placeholder_for_build_only" >> .env && \
-    echo "OLLAMA_CONNECTION_STRING=place_holder" >> .env
 
 # Build the application
 RUN npm run build
