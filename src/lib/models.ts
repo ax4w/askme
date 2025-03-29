@@ -1,40 +1,48 @@
-import { deepSeekApiKey, geminiApiKey, ollamaConnectionString } from './env';
-import { allAvailableOllamaModels } from './ollama';
-
-export interface Model {
-    id: string;
-    name: string;
+import { managementConnectionString } from './env';
+import { validateSession } from './auth';
+import { goto } from '$app/navigation';
+export type Model = {
+    id: string
+    name: string
+}
+export interface Message {
+    content: string;
+    author: string;
+    model?: string;
 }
 
-export async function allAvailableModels(): Promise<Model[]> {
-    let models: Model[] = [];
-    if (deepSeekApiKey()) {
-        models.push({
-            id: 'deepseek-chat',
-            name: 'DeepSeek Chat',
-        });
-        models.push({
-            id: 'deepseek-reasoner',
-            name: 'DeepSeek Reasoner',
-        });
+export async function getAvailableModels(sessionToken: string) {
+    let valid = await validateSession(sessionToken)
+    if (!valid) {
+        throw new Error("Invalid session")
     }
-    if (geminiApiKey()) {
-        models.push({
-            id: 'gemini-2.0-flash',
-            name: 'Gemini 2.0 Flash',
-        });
+   console.log("sessionToken:", `${sessionToken}`)
+    const response = await fetch(`http://${managementConnectionString()}/get-available-models`, {
+        headers: {
+            'Authorization': `${sessionToken}`,
+        },
+    })
+    const data = await response.json()
+    console.log("getAvailableModels data:")
+    console.log(data)
+    
+    return data
+}
+
+export async function queryModel(sessionToken: string, model: string, message: string) {
+    let valid = await validateSession(sessionToken)
+    if (!valid) {
+        throw new Error("Invalid session")
     }
-    if (ollamaConnectionString()) {
-        let ollamaModels = await allAvailableOllamaModels();
-        ollamaModels.forEach(model => {
-            models.push({
-                id: model.id,
-                name: model.name,
-            });
-        });
-    }
-    models.forEach(model => {
-        console.log(model);
-    });
-    return models;
+    const response = await fetch(`http://${managementConnectionString()}/query-model`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `${sessionToken}`,
+        },
+        body: JSON.stringify({ model, message })
+    })
+    const data = await response.json()
+    console.log("queryModel data:")
+    console.log(data)
+    return data
 }

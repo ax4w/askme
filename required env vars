@@ -2,4 +2,6 @@
 DEEPSEEK_API_KEY=your_deepseek_api_key_here
 GEMINI_API_KEY=your_gemini_api_key_here
 ADMIN_PW=your_admin_password_here
+-- if not running the compose extra vars must be set:
 OLLAMA_CONNECTION_STRING=place_holder
+MANAGEMENT_CONNECTION_STRING=place_holder

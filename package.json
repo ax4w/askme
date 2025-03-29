@@ -39,6 +39,7 @@
 	"dependencies": {
 		"daisyui": "^5.0.9",
 		"dotenv": "^16.4.7",
+		"ollama": "^0.5.14",
 		"openai": "^4.90.0",
 		"svelte-exmarkdown": "^5.0.0"
 	}

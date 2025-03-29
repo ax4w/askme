@@ -1,37 +1,47 @@
-import { error } from '@sveltejs/kit';
-import type { Cookies } from '@sveltejs/kit';
-import crypto from 'crypto';
-import { adminPassword } from './env';
+import { managementConnectionString } from './env';
 
-export async function validateSession(cookies : Cookies) {
-    const sessionCookie = cookies.get('session');
-
-    if (!sessionCookie) {
-        throw error(401, 'No session found');
+export async function authWithManagement(username: string, password: string) {
+    console.log("managementConnectionString1:", `http://${managementConnectionString()}/login`)
+    let response = await fetch(`http://${managementConnectionString()}/login`, {
+        method: 'POST',
+        body: JSON.stringify({ username, password }),
+    })
+    
+    if (!response.ok) {
+        console.log("Authentication failed, response:",response)
+        return {success: false, token: ""};
     }
+    let data = await response.json();
+    return {success: data.success === "true", token: data.token};
+}
 
-    try {
-        const [ivHex, encryptedData] = sessionCookie.split(':');
-        const iv = Buffer.from(ivHex, 'hex');
-        
-        const key = crypto.createHash('sha256').update(adminPassword()).digest();
-        const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-        
-        let decrypted = decipher.update(encryptedData, 'hex', 'utf8');
-        decrypted += decipher.final('utf8');
-        
-        const sessionData = JSON.parse(decrypted);
-        
-        const now = new Date();
-        const expires = new Date(sessionData.expires);
-        
-        if (expires < now || sessionData.secret !== adminPassword()) {
-            cookies.delete('session', { path: '/' });
-            throw error(401, 'No session found');
+export async function doesUserExist(username: string) {
+    return await fetch(`http://${managementConnectionString()}/does-user-exist`, {
+        method: 'POST',
+        body: JSON.stringify({ username }),
+    }).then(res => {
+        if (!res.ok) {
+            return false;
         }
-        return true;
-    } catch (err) {
-        cookies.delete('session', { path: '/' });
-        throw error(401, 'No session found');
+        return res.json();
+    }).then(data => {
+        return data.exists;
+    })
+}
+
+export async function validateSession(sessionToken: string) {
+    let response = await fetch(`http://${managementConnectionString()}/auth`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `${sessionToken}`,
+        },
+    })
+
+    if (!response.ok) {
+        console.log("Authentication failed, response:",response)
+        return false;
     }
+    let data = await response.json();
+    console.log("validateSession data:", data)
+    return data.success;
 }
